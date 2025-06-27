@@ -11,7 +11,7 @@ infura_url = f"https://mainnet.infura.io/v3/{infura_token}"
 '''
 
 def connect_to_eth():
-	url = ""  # FILL THIS IN
+	url = "https://ethereum-mainnet.core.chainstack.com/365e206edcf3bb214095d9d169ff5c7b"  # FILL THIS IN
 	w3 = Web3(HTTPProvider(url))
 	assert w3.is_connected(), f"Failed to connect to provider at {url}"
 	return w3
@@ -26,15 +26,24 @@ def connect_with_middleware(contract_json):
 
 	# TODO complete this method
 	# The first section will be the same as "connect_to_eth()" but with a BNB url
-	w3 = 0
+	url = "https://bsc-testnet.drpc.org" 
+	w3  = Web3(HTTPProvider(url))
+	assert w3.is_connected(), f"Failed to connect to {url}"
+
 
 	# The second section requires you to inject middleware into your w3 object and
 	# create a contract object. Read more on the docs pages at https://web3py.readthedocs.io/en/stable/middleware.html
 	# and https://web3py.readthedocs.io/en/stable/web3.contract.html
-	contract = 0
+	w3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
+	contract = w3.eth.contract(address=address, abi=abi)
 
 	return w3, contract
 
 
 if __name__ == "__main__":
-	connect_to_eth()
+	w3 = connect_to_eth()
+	print("Connected to Mainnet:", w3.is_connected())
+	print("Latest block number:", w3.eth.block_number)
+	w3_bnb, contract = connect_with_middleware("contract_info.json")
+	print("BNB Testnet connected:", w3_bnb.is_connected())
+	print("Contract functions:", contract.functions)
