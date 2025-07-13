@@ -25,7 +25,7 @@ contract Destination is AccessControl {
 	function wrap(address _underlying_token, address _recipient, uint256 _amount ) public onlyRole(WARDEN_ROLE) {
 		//YOUR CODE HERE
 		//check that token registered
-		address wrapped = underlying_tokens[_underlying_token];
+		address wrapped = wrapped_tokens[_underlying_token];
         require(wrapped != address(0), "Token not registered");
 
         // Mint wrapped tokens to recipient
@@ -45,8 +45,8 @@ contract Destination is AccessControl {
         // burn from caller
         BridgeToken(_wrapped_token).burnFrom(msg.sender, _amount);
 
-        // emit event so the bridge operator can release tokens
-        address underlying = wrapped_tokens[_wrapped_token];
+        // Figure out which underlying asset this wrapped token corresponds to
+        address underlying = underlying_tokens[_wrapped_token];
         emit Unwrap(underlying, _wrapped_token, msg.sender, _recipient, _amount);
 	}
 
@@ -61,8 +61,8 @@ contract Destination is AccessControl {
         // Deploy new BridgeToken
         BridgeToken bt = new BridgeToken(_underlying_token, name, symbol, address(this));
 
-        underlying_tokens[_underlying_token] = address(bt);
-        wrapped_tokens[address(bt)] = _underlying_token;
+        wrapped_tokens[_underlying_token] = address(bt);
+        underlying_tokens[address(bt)] = _underlying_token;
         tokens.push(address(bt));
 
         // Emit creation event
@@ -71,5 +71,3 @@ contract Destination is AccessControl {
 	}
 
 }
-
-
