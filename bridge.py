@@ -76,7 +76,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
 
     # create the filter
     event_obj = getattr(contract.events, event_name)
-    evf = event_obj.createFilter(fromBlock=start, toBlock=latest)
+    evf = event_obj.create_filter(from_block=start, to_block=latest)
     entries = evf.get_all_entries()
     print(f"[{chain}] saw {len(entries)} {event_name} events")
 
