@@ -79,7 +79,13 @@ def scan_blocks(chain, contract_info="contract_info.json"):
     event_obj = getattr(contract.events, event_name)
     evf = event_obj.create_filter(from_block=start, to_block=latest)
     entries = evf.get_all_entries()
-    print(f"[{chain}] saw {len(entries)} {event_name} events")
+    if chain == 'source':
+        entries = sorted(entries,
+                        key=lambda e: str(e.args['token']).lower())
+    else:
+        entries = sorted(entries,
+                        key=lambda e: str(e.args['underlying_token']).lower())
+
 
     for e in entries:
         if chain == 'source':
@@ -92,7 +98,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
             acct_o = acct_dst
         else:
             tx = other.functions.withdraw(
-                e.args['wrapped_token'],
+                e.args['underlying_token'],
                 e.args['to'],
                 e.args['amount']
             )
