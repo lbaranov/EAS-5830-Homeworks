@@ -71,7 +71,8 @@ def scan_blocks(chain, contract_info="contract_info.json"):
         event_name = 'Unwrap'
 
     latest = w3.eth.get_block_number()
-    start = latest - 5 if latest >= 5 else 0
+    window = 10
+    start = latest - window if latest >= window else 0
     print(f"[{chain}] scanning blocks {start}–{latest}")
 
     # create the filter
