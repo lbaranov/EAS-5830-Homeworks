@@ -100,7 +100,7 @@ def scan_blocks(chain, contract_info="contract_info.json"):
             acct_o = acct_src
 
         # build, sign, and send on the other chain
-        nonce = w3_o.eth.get_transaction_count(acct_o.address)
+        nonce = w3_o.eth.get_transaction_count(acct_o.address, "pending")
         built = tx.build_transaction({
             'chainId': w3_o.eth.chain_id,
             'gas':     300_000,
