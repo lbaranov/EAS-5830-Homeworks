@@ -107,6 +107,6 @@ def scan_blocks(chain, contract_info="contract_info.json"):
             'nonce':   nonce,
         })
         signed = acct_o.sign_transaction(built)
-        txh = w3_o.eth.send_raw_transaction(signed.rawTransaction)
+        txh = w3_o.eth.send_raw_transaction(signed.raw_transaction)
         print(f"→ forwarded {event_name} event in tx {txh.hex()}")
 
